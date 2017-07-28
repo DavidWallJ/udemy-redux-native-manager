@@ -1,4 +1,5 @@
 import firebase from 'firebase';
+import { Actions } from 'react-native-router-flux';
 
 export const emailChanged = (text) => {
   return {
@@ -22,7 +23,7 @@ export const loginUser = ({ email, password }) => {
       .then(user => loginUserSuccess(dispatch, user))
       .catch((error) => {
         console.log(error);
-        
+
         firebase.auth().createUserWithEmailAndPassword(email, password)
           .then(user => loginUserSuccess(dispatch, user))
           .catch(() => loginUserFail(dispatch));
@@ -40,4 +41,10 @@ const loginUserSuccess = (dispatch, user) => {
     type: 'loginUserSuccess',
     payload: user
   });
+
+  // react-native-router-flux's Actions va has our employeeList on it
+  // because it's set as the 'key' on the 'Scene' tag in the 'Router.js' file
+  // if the scene wasn't nested we wouldn't need the 'main'
+  // we'd go directly to actual key for the component
+  Actions.main();
 };
